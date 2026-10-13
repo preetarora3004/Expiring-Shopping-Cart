@@ -1,0 +1,98 @@
+generator client {
+    provider = "prisma-client"
+    output   = "../generated/prisma"
+}
+
+datasource db {
+    provider = "postgresql"
+}
+
+model Customer {
+    id       String @id @default(cuid())
+    username String
+    password String
+
+    createdAt     DateTime @default(now())
+    customerCarts Cart[]
+    orders        Order[]
+
+    @@index([id, username])
+}
+
+model Store {
+    id String @id @default(cuid())
+
+    inventories Inventory[]
+}
+
+model Inventory {
+    id String @id @default(cuid())
+
+    store   Store  @relation(fields: [storeId], references: [id])
+    storeId String
+
+    items Item[]
+
+    @@index([storeId])
+}
+
+model Item {
+    id String @id @default(cuid())
+
+    name  String
+    count Int
+
+    inventory     Inventory      @relation(fields: [inventoryId], references: [id])
+    inventoryId   String
+    reservedItems ReservedItem[]
+
+    @@index([name, inventoryId])
+}
+
+model Order {
+    id String @id @default(cuid())
+
+    customer   Customer @relation(fields: [customerId], references: [id])
+    customerId String
+
+    cart   Cart   @relation(fields: [cartId], references: [id])
+    cartId String
+
+    createdAt DateTime @default(now())
+
+    @@index([customerId, cartId])
+}
+
+model Cart {
+    id String @id @default(cuid())
+
+    customer   Customer @relation(fields: [customerId], references: [id])
+    customerId String
+
+    reservedItems ReservedItem[]
+    orders        Order[]
+
+    isActive Boolean @default(true)
+
+    createdAt DateTime @default(now())
+
+    @@index([customerId, isActive])
+}
+
+model ReservedItem {
+    id String @id @default(cuid())
+
+    count Int
+    ttl   Int
+
+    item   Item   @relation(fields: [itemId], references: [id])
+    itemId String
+
+    customerCart Cart   @relation(fields: [cartId], references: [id])
+    cartId       String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    @@index([itemId, cartId])
+}
