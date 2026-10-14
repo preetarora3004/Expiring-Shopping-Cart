@@ -28,7 +28,7 @@ export class Repository {
     public async updateInventoryItem<T>(tx: Prisma.TransactionClient, itemId: string, count: number): Promise<T> {
         return tx.$queryRaw<T>`
             UPDATE "Item"
-            SET count = ${count}
+            SET count = count - ${count}
             WHERE id = ${itemId}
             RETURNING *;
         `
@@ -60,7 +60,9 @@ export class Repository {
                 id: itemId
             },
             data: {
-                count: count
+                count: {
+                    increment: count
+                }
             }
         })
     }

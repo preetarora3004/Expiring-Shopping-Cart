@@ -7,7 +7,7 @@
     "moduleDetection": "force",
     "allowJs": true,
     "paths": {
-        "@workspace/server/*": ["./src/repository/*", "./src/routes/*", "./src/service/*", "./src/controller/*", "./src/dependency/*", "./src/worker1/*", "./src/cache/*"],
+        "@workspace/server/*": ["./src/repository/*", "./src/routes/*", "./src/service/*", "./src/controller/*", "./src/dependency/*", "./src/worker1/*", "./src/cache/*", "./src/worker2/*", "./src/types/*"],
         "@workspace/db/*": ["../db/*", "../db/lib/*"] 
     },
 
